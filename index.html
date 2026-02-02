@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MacBook Love</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,sans-serif;}
+body{background:#222;display:flex;justify-content:center;align-items:center;height:100vh;}
+
+.macbook{width:95vw;max-width:950px;background:#111;border-radius:20px;padding:15px;box-shadow:0 0 40px #000;}
+.screen{background:#000;border-radius:15px;overflow:hidden;position:relative;height:520px;}
+.keyboard{height:120px;background:linear-gradient(#444,#222);border-radius:0 0 15px 15px;}
+
+.lock{width:100%;height:100%;background:url('wallpaper.jpg') center/cover;color:white;
+display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;}
+.clock{font-size:60px;font-weight:200;}
+
+.keypad{display:none;position:absolute;inset:0;background:rgba(0,0,0,.9);
+color:white;justify-content:center;align-items:center;flex-direction:column;}
+.display{letter-spacing:12px;font-size:26px;margin:10px;}
+
+.keys{display:grid;grid-template-columns:repeat(3,65px);gap:15px;margin-top:15px;}
+.key{
+background:#333;padding:18px;border-radius:50%;
+text-align:center;cursor:pointer;
+transition:.15s;
+}
+.key:active{transform:scale(.9);box-shadow:0 0 12px #fff;}
+
+.okbtn{
+margin-top:20px;background:#555;padding:10px 35px;
+border-radius:15px;cursor:pointer;
+transition:.2s;
+}
+.okbtn:active{transform:scale(.95);}
+
+.shake{animation:shake .4s;}
+@keyframes shake{
+0%,100%{transform:translateX(0)}
+25%{transform:translateX(-6px)}
+50%{transform:translateX(6px)}
+75%{transform:translateX(-6px)}
+}
+
+.desktop{display:none;width:100%;height:100%;background:url('wallpaper.jpg') center/cover;padding:20px;}
+.icons{display:grid;grid-template-columns:repeat(6,70px);gap:25px;}
+.icon{text-align:center;color:white;font-size:12px;cursor:pointer;}
+.icon img{width:48px;}
+
+.notif{position:absolute;top:-100px;left:50%;transform:translateX(-50%);
+background:#333;color:white;padding:15px 25px;border-radius:15px;transition:.5s;}
+.notif.show{top:20px;}
+
+/* TELEGRAM */
+.telegram{display:none;position:absolute;inset:40px;background:#1e2c3a;border-radius:12px;color:white;}
+.tg-bar{display:flex;gap:8px;padding:10px;}
+.dot{width:12px;height:12px;border-radius:50%;cursor:pointer;}
+.red{background:#ff5f56;}
+.yellow{background:#ffbd2e;}
+.green{background:#27c93f;}
+
+.tg-header{display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #333;}
+.tg-header img{width:38px;height:38px;border-radius:50%;}
+.online{color:#3aff3a;font-size:12px;}
+
+.tg-chat{
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:10px;
+height:100%;
+overflow-y:auto;
+scroll-behavior:smooth;
+}
+
+.bubble{max-width:70%;padding:10px;border-radius:15px;}
+.left{background:#2f3f50;align-self:flex-start;}
+.right{background:#4b8df8;align-self:flex-end;}
+
+.typing{
+width:45px;height:20px;
+background:#2f3f50;
+border-radius:15px;
+display:flex;align-items:center;justify-content:center;gap:4px;
+}
+.rightTyping{align-self:flex-end;background:#4b8df8;}
+
+.typing span{
+width:6px;height:6px;background:#bbb;border-radius:50%;
+animation:blink 1.4s infinite both;
+}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+
+@keyframes blink{
+0%{opacity:.2}
+20%{opacity:1}
+100%{opacity:.2}
+}
+
+/* INSTAGRAM MACOS */
+.instagram{
+display:none;
+position:absolute;
+inset:40px;
+background:#000;
+color:#fff;
+border-radius:14px;
+overflow:hidden;
+animation:fadeUp .3s ease;
+overflow-y:auto; 
+ scrollbar-width:thin;
+}
+
+.ig-bar{
+  display:flex;
+  gap:8px;
+  padding:10px;
+  position:sticky;
+  top:0;
+  z-index:50;        /* PENTING */
+  background:#000;  /* biar nggak tembus */
+  pointer-events:auto;
+}
+
+
+.ig-header{
+display:flex;
+align-items:center;
+gap:12px;
+padding:12px;
+border-bottom:1px solid #222;
+}
+.ig-header img{
+width:40px;height:40px;border-radius:50%;object-fit:cover;
+}
+.ig-user{font-weight:600}
+
+/* FEED */
+.ig-feed{
+  padding:20px;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+}
+
+.ig-post{
+  width:420px;
+  max-width:90%;
+border:1px solid #222;
+border-radius:12px;
+overflow:hidden;
+}
+.ig-post img{
+width:100%;
+aspect-ratio:4/5;
+object-fit:cover;
+}
+.ig-caption{
+padding:10px;
+font-size:14px;
+line-height:1.4;
+color:#ddd;
+}
+
+.storyImage{
+width:100%;
+max-width:360px;
+height:500px;
+object-fit:cover;
+}
+
+
+/* STORY RING */
+.story-wrap{display:flex;gap:12px;padding:12px;border-bottom:1px solid #222}
+.story{
+width:60px;height:60px;border-radius:50%;
+border:2px solid #ff4d67;padding:2px;cursor:pointer;
+animation:storyGlow 1.8s infinite alternate;
+}
+@keyframes storyGlow{
+from{box-shadow:0 0 4px #ff4d67}
+to{box-shadow:0 0 14px #ff4d67}
+}
+.story img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+
+.storyProgress{
+position:absolute;
+top:0;left:0;
+height:3px;
+background:#fff;
+width:0%;
+z-index:20;
+}
+
+
+.story img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+
+/* STORY VIEW */
+.storyView{
+display:none;
+position:absolute;
+inset:0;
+background:#000;
+align-items:center;
+justify-content:center;
+}
+.storySlider{
+display:flex;
+width:300%;
+transition:.4s;
+}
+.storySlider img{
+width:100vw;
+max-width:360px;
+height:500px;
+object-fit:cover;
+}
+.storyClose{
+position:absolute;
+top:15px;right:20px;
+font-size:22px;
+cursor:pointer;
+}
+
+/* POST IMAGE RATIO */
+.ig-post img{
+width:100%;
+aspect-ratio:4/5;
+object-fit:cover;
+border-radius:12px;
+}
+
+/* CAPTION RAPI */
+.ig-caption{
+padding:8px 10px 12px;
+font-size:14px;
+line-height:1.4;
+color:#ddd;
+}
+
+/* SPOTIFY MACOS */
+.spotify{
+  display:none;
+  position:absolute;
+  inset:40px;
+  background:#121212;
+  color:#fff;
+  border-radius:14px;
+  overflow:hidden;
+}
+
+.spotify-bar{
+  display:flex;
+  gap:8px;
+  padding:10px;
+  background:#000;
+}
+
+.spotify-content{
+  padding:20px;
+  display:flex;
+  gap:20px;
+}
+
+.spotify-cover{
+  width:180px;
+  height:180px;
+  border-radius:8px;
+  object-fit:cover;
+}
+
+.spotify-list{
+  flex:1;
+}
+
+.track{
+  padding:10px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.track.active{
+  background:#1db954;
+  color:#000;
+  font-weight:600;
+}
+
+.track:hover{
+  background:#1db95433;
+}
+
+.equalizer{
+  display:flex;
+  gap:3px;
+  align-items:flex-end;
+  height:18px;
+}
+
+.eq{
+  width:3px;
+  background:#1db954;
+  animation:equalize 1s infinite ease-in-out;
+}
+
+.eq:nth-child(2){animation-delay:.2s}
+.eq:nth-child(3){animation-delay:.4s}
+.eq:nth-child(4){animation-delay:.6s}
+
+@keyframes equalize{
+  0%{height:4px}
+  50%{height:18px}
+  100%{height:6px}
+}
+
+
+.spotify-notes{
+  padding:20px;
+  font-size:14px;
+  line-height:1.6;
+  color:#ccc;
+  overflow-y:auto;
+  max-height:140px;
+}
+
+.spotify-player{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#000;
+  padding:10px;
+}
+
+
+
+</style>
+</head>
+
+<body>
+
+<div class="macbook">
+<div class="screen">
+
+<div class="notif" id="notif"></div>
+
+<div class="lock" id="lock">
+<div class="clock" id="clock"></div>
+<p>Tap untuk membuka</p>
+</div>
+
+<div class="keypad" id="keypad">
+<p>Masukkan Kode</p>
+<div class="display" id="display">_____</div>
+<div class="keys" id="keys"></div>
+<div class="okbtn" onclick="checkCode()">OK</div>
+</div>
+
+<div class="desktop" id="desktop">
+<div class="icons">
+<div class="icon" onclick="openTelegram()">
+<img src="http://pluspng.com/img-png/telegram-logo-png-open-2000.png">
+<p>Telegram</p>
+</div>
+<div class="icon" onclick="openInstagram()">
+<img src="https://www.pngall.com/wp-content/uploads/15/Black-Instagram-Logo-PNG-Background.png">
+<p>Instagram</p>
+</div>
+<div class="icon" onclick="openSpotify()">
+  <img src="https://static.vecteezy.com/system/resources/previews/018/930/579/original/spotify-app-logo-spotify-icon-transparent-free-png.png">
+  <p>Spotify</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="telegram" id="telegram">
+<div class="tg-bar">
+<div class="dot red" onclick="closeTelegram()"></div>
+<div class="dot yellow" onclick="closeTelegram()"></div>
+<div class="dot green"></div>
+</div>
+
+<div class="tg-header">
+<img src="hubby.jpg">
+<div><b>Hubby</b><br><span class="online">online</span></div>
+</div>
+
+<div class="tg-chat" id="tgChat"></div>
+</div>
+
+</div>
+<div class="keyboard"></div>
+</div>
+
+
+ <!-- INSTAGRAM -->
+<div class="instagram" id="instagram">
+<div class="ig-bar">
+<div class="dot red" onclick="closeInstagram()"></div>
+<div class="dot yellow" onclick="closeInstagram()"></div>
+<div class="dot green"></div>
+</div>
+
+<div class="ig-header">
+<img src="aku.jpg"><b>mine4ever</b>
+</div>
+
+<div class="story-wrap">
+<div class="story" onclick="openStory()">
+<img src="aku.jpg">
+</div>
+</div>
+
+
+<div class="ig-post" id="igPost">
+  <img id="postImg" src="post1.jpg">
+
+  <div class="ig-caption">
+    <b>mine4ever</b> forever sounds good with you
+  </div>
+</div>
+
+
+<!-- STORY -->
+<div class="storyView" id="storyView">
+  <div onclick="nextStory()" style="position:absolute;inset:0;z-index:10"></div>
+  <div class="storyProgress" id="storyProgress"></div>
+  <div class="storyClose" onclick="closeStory()">✕</div>
+  <img id="storyImg" src="sg1.jpg" class="storyImage">
+</div>
+</div>
+
+<!-- SPOTIFY -->
+<div class="spotify" id="spotify">
+
+  <div class="spotify-bar">
+    <div class="dot red" onclick="closeSpotify()"></div>
+    <div class="dot yellow" onclick="closeSpotify()"></div>
+    <div class="dot green"></div>
+  </div>
+
+  <div class="spotify-content">
+    <img src="spotify-cover.jpg" class="spotify-cover">
+
+    <div class="spotify-list">
+      <div class="track" onclick="playSong(0)">
+        last forever – LANY
+      </div>
+      <div class="track" onclick="playSong(1)">
+        constant – Jeremy Passion
+      </div>
+      <div class="track" onclick="playSong(2)">
+        king of my heart – Taylor Swift
+      </div>
+    </div>
+  </div>
+
+  <div class="spotify-notes" id="spotifyNotes"></div>
+
+  <div class="spotify-player">
+    <audio id="spotifyAudio" controls style="width:100%"></audio>
+  </div>
+</div>
+
+
+
+
+<audio id="popSound" src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_5d3d83a4fa.mp3"></audio>
+<audio id="seenSound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_0c5a3d3f75.mp3"></audio>
+
+<script>
+const clock=document.getElementById('clock');
+const keypad=document.getElementById('keypad');
+const display=document.getElementById('display');
+const keys=document.getElementById('keys');
+const tgChat=document.getElementById('tgChat');
+const popSound=document.getElementById('popSound');
+const seenSound=document.getElementById('seenSound');
+
+setInterval(()=>{
+let d=new Date();
+clock.innerText=d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0');
+},1000);
+
+lock.onclick=()=>{lock.style.display='none';keypad.style.display='flex';};
+
+let input="",correct="30825";
+
+/* KEYPAD 1-9-0 */
+[1,2,3,4,5,6,7,8,9,0].forEach(n=>{
+let k=document.createElement("div");
+k.className="key";
+k.innerText=n;
+k.onclick=()=>{
+if(input.length<5){
+input+=n;
+display.innerText=input.padEnd(5,'_');
+}
+};
+keys.appendChild(k);
+});
+
+function checkCode(){
+if(input===correct){
+showNotif("I Love You");
+setTimeout(()=>{keypad.style.display='none';desktop.style.display='block';},1000);
+}else{
+keypad.classList.add("shake");
+showNotif("Salah sayang, coba lagi ya");
+setTimeout(()=>keypad.classList.remove("shake"),400);
+input="";display.innerText="_____";
+}
+}
+
+function showNotif(t){
+notif.innerText=t;
+notif.classList.add("show");
+setTimeout(()=>notif.classList.remove("show"),2000);
+}
+
+function openTelegram(){
+desktop.style.display='none';
+telegram.style.display='block';
+tgChat.innerHTML="";
+sendMessages();
+}
+
+function typeBubble(el,text,cb){
+let i=0;
+let int=setInterval(()=>{
+el.innerHTML+=text[i];
+tgChat.scrollTop=tgChat.scrollHeight;
+i++;
+if(i>=text.length){clearInterval(int);cb&&cb();}
+},35);
+}
+
+function sendMessages(){
+const msgs=[
+["left","Happy mensive to us sayang, thank you for staying with me"],
+["right","happy mensive bebee, let's keep choosing each other ya, not only on good days but also on hard ones"],
+["left","I'm not going anywhere sayang, let's make more memories, okay?"],
+["right","Hihi okeeyy, thank you for existing and thank you for loving me the way you do"],
+["left","Ga kerasa ya kita udah lewatin 5 bulan"],
+["right","Iyaa yaa, banyak banget lika likunya tapi kita sellau bisa lewatinn"],
+];
+
+let i=0;
+function next(){
+if(i>=msgs.length) return;
+
+let typing=document.createElement("div");
+typing.className="typing "+(msgs[i][0]==="right"?"rightTyping":"");
+typing.innerHTML="<span></span><span></span><span></span>";
+tgChat.appendChild(typing);
+tgChat.scrollTop=tgChat.scrollHeight;
+
+setTimeout(()=>{
+typing.remove();
+let b=document.createElement("div");
+b.className="bubble "+msgs[i][0];
+tgChat.appendChild(b);
+popSound.play();
+
+typeBubble(b,msgs[i][1],()=>{
+if(msgs[i][0]==="right") seenSound.play();
+i++; setTimeout(next,600);
+});
+},1000);
+}
+next();
+}
+
+function closeTelegram(){
+telegram.style.display='none';
+desktop.style.display='block';
+}
+
+function openInstagram(){
+  desktop.style.display = "none";
+  instagram.style.display = "block";
+}
+
+function closeInstagram(){
+  instagram.style.display = "none";
+  desktop.style.display = "block";
+}
+
+
+const instagram=document.getElementById("instagram");
+const storyView=document.getElementById("storyView");
+const storyProgress = document.getElementById("storyProgress");
+
+const storyImages = ["sg1.jpg","sg2.jpg","sg3.jpg"];
+let sgIndex = 0;
+const storyImg = document.getElementById("storyImg");
+
+const postImages = ["post1.jpg","post2.jpg","post3.jpg"];
+let postIndex = 0;
+const postImg = document.getElementById("postImg");
+const igPost = document.getElementById("igPost");
+
+igPost.addEventListener("click",(e)=>{
+  const rect = igPost.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+
+  if(x > rect.width/2){
+    nextPost(); // kanan
+  }else{
+    prevPost(); // kiri
+  }
+});
+
+
+function nextPost(){
+  postIndex++;
+  if(postIndex >= postImages.length) postIndex = postImages.length-1;
+  postImg.src = postImages[postIndex];
+}
+
+function prevPost(){
+  postIndex--;
+  if(postIndex < 0) postIndex = 0;
+  postImg.src = postImages[postIndex];
+}
+
+
+
+
+function openStory(){
+storyView.style.display="flex";
+sgIndex = 0;
+storyImg.src = storyImages[sgIndex];
+resetProgress();
+startProgress();
+}
+
+function nextStory(){
+sgIndex++;
+if(sgIndex >= storyImages.length){
+closeStory();
+return;
+}
+storyImg.src = storyImages[sgIndex];
+resetProgress();
+startProgress();
+}
+
+function resetProgress(){
+storyProgress.style.transition="none";
+storyProgress.style.width="0%";
+}
+
+function startProgress(){
+setTimeout(()=>{
+storyProgress.style.transition="width 5s linear";
+storyProgress.style.width="100%";
+},50);
+
+setTimeout(()=>{
+nextStory();
+},5050);
+}
+
+function closeStory(){
+storyView.style.display="none";
+resetProgress();
+}
+
+const spotify = document.getElementById("spotify");
+const spotifyAudio = document.getElementById("spotifyAudio");
+const spotifyNotes = document.getElementById("spotifyNotes");
+
+const songs = [
+  {
+    src:"last-forever-lany.mp3",
+    note:`yang pertama aku pilih lagu “last forever” – lany.
+kayanya aku udah berkali-kali deh kasih kamu lagu ini hehe, hope you don’t get bored.
+
+lagu ini really describes the hope of staying, choosing each other every day, and growing together, even when things aren’t always perfect.
+
+tentang komitmen buat tetap bertahan, saling ngerti, dan nggak pergi cuma karena keadaan lagi sulit.
+
+and that’s honestly one of my wishes for you—to be someone i can walk through everything with, and hopefully, my last love.`
+  },
+  {
+    src:"constant-jeremy-passion.mp3",
+    note:`yang kedua aku kasih kamu lagu “constant” – jeremy passion.
+
+lagu ini talks about how life is full of changes—people come and go, plans shift, and sometimes everything feels uncertain.
+
+but in the middle of all that, there’s one person who stays.
+you’re the constant, the comfort, and the only thing that makes everything feel okay.`
+  },
+  {
+    src:"king-of-my-heart.mp3",
+    note:`yang ketiga dan terakhir aku kasih kamu lagu “king of my heart” – taylor swift.
+
+lagu ini about finding someone who suddenly changes your whole perspective on love.
+
+from all that came and went, you’re the one who holds my heart now.`
+  }
+];
+
+
+function closeSpotify(){
+  spotify.style.display="none";
+  desktop.style.display="block";
+  spotifyAudio.pause();
+}
+
+function openSpotify(){
+  desktop.style.display="none";
+  spotify.style.display="block";
+  playSong(0); // AUTO PLAY
+}
+
+const tracks = document.querySelectorAll(".track");
+
+function playSong(i){
+  // reset semua track
+  tracks.forEach(t=>{
+    t.classList.remove("active");
+    t.querySelector(".equalizer").style.display="none";
+  });
+
+  // aktifkan track sekarang
+  tracks[i].classList.add("active");
+  tracks[i].querySelector(".equalizer").style.display="flex";
+
+  spotifyAudio.src = songs[i].src;
+  spotifyAudio.play();
+  spotifyNotes.innerText = songs[i].note;
+}
+
+</script>
+
+</body>
+</html>
