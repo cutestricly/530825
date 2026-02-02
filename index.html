@@ -13,7 +13,7 @@ body{background:#222;display:flex;justify-content:center;align-items:center;heig
 .screen{background:#000;border-radius:15px;overflow:hidden;position:relative;height:520px;}
 .keyboard{height:120px;background:linear-gradient(#444,#222);border-radius:0 0 15px 15px;}
 
-.lock{width:100%;height:100%;background:url('assets/images/wallpaper.jpg') center/cover;color:white;
+.lock{width:100%;height:100%;background:url('assets/images/Wallpaperr.jpg') center/cover;color:white;
 display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;}
 .clock{font-size:60px;font-weight:200;}
 
@@ -44,7 +44,7 @@ transition:.2s;
 75%{transform:translateX(-6px)}
 }
 
-.desktop{display:none;width:100%;height:100%;background:url('assets/images/wallpaper.jpg') center/cover;padding:20px;}
+.desktop{display:none;width:100%;height:100%;background:url('assets/images/Wallpaperr.jpg') center/cover;padding:20px;}
 .icons{display:grid;grid-template-columns:repeat(6,70px);gap:25px;}
 .icon{text-align:center;color:white;font-size:12px;cursor:pointer;}
 .icon img{width:48px;}
@@ -282,39 +282,9 @@ color:#ddd;
   cursor:pointer;
 }
 
-.track.active{
-  background:#1db954;
-  color:#000;
-  font-weight:600;
-}
-
 .track:hover{
   background:#1db95433;
 }
-
-.equalizer{
-  display:flex;
-  gap:3px;
-  align-items:flex-end;
-  height:18px;
-}
-
-.eq{
-  width:3px;
-  background:#1db954;
-  animation:equalize 1s infinite ease-in-out;
-}
-
-.eq:nth-child(2){animation-delay:.2s}
-.eq:nth-child(3){animation-delay:.4s}
-.eq:nth-child(4){animation-delay:.6s}
-
-@keyframes equalize{
-  0%{height:4px}
-  50%{height:18px}
-  100%{height:6px}
-}
-
 
 .spotify-notes{
   padding:20px;
@@ -464,8 +434,6 @@ color:#ddd;
     <audio id="spotifyAudio" controls style="width:100%"></audio>
   </div>
 </div>
-
-
 
 
 <audio id="popSound" src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_5d3d83a4fa.mp3"></audio>
@@ -676,7 +644,7 @@ const spotifyNotes = document.getElementById("spotifyNotes");
 
 const songs = [
   {
-    src:"assets/music/last-forever-lany.mp3",
+    src:"last-forever-lany.mp3",
     note:`yang pertama aku pilih lagu “last forever” – lany.
 kayanya aku udah berkali-kali deh kasih kamu lagu ini hehe, hope you don’t get bored.
 
@@ -687,7 +655,7 @@ tentang komitmen buat tetap bertahan, saling ngerti, dan nggak pergi cuma karena
 and that’s honestly one of my wishes for you—to be someone i can walk through everything with, and hopefully, my last love.`
   },
   {
-    src:"assect/music/constant-jeremy-passion.mp3",
+    src:"constant-jeremy-passion.mp3",
     note:`yang kedua aku kasih kamu lagu “constant” – jeremy passion.
 
 lagu ini talks about how life is full of changes—people come and go, plans shift, and sometimes everything feels uncertain.
@@ -696,7 +664,7 @@ but in the middle of all that, there’s one person who stays.
 you’re the constant, the comfort, and the only thing that makes everything feel okay.`
   },
   {
-    src:"assect/music/king-of-my-heart.mp3",
+    src:"king-of-my-heart.mp3",
     note:`yang ketiga dan terakhir aku kasih kamu lagu “king of my heart” – taylor swift.
 
 lagu ini about finding someone who suddenly changes your whole perspective on love.
@@ -705,6 +673,10 @@ from all that came and went, you’re the one who holds my heart now.`
   }
 ];
 
+function openSpotify(){
+  desktop.style.display="none";
+  spotify.style.display="block";
+}
 
 function closeSpotify(){
   spotify.style.display="none";
@@ -712,30 +684,11 @@ function closeSpotify(){
   spotifyAudio.pause();
 }
 
-function openSpotify(){
-  desktop.style.display="none";
-  spotify.style.display="block";
-  playSong(0); // AUTO PLAY
-}
-
-const tracks = document.querySelectorAll(".track");
-
 function playSong(i){
-  // reset semua track
-  tracks.forEach(t=>{
-    t.classList.remove("active");
-    t.querySelector(".equalizer").style.display="none";
-  });
-
-  // aktifkan track sekarang
-  tracks[i].classList.add("active");
-  tracks[i].querySelector(".equalizer").style.display="flex";
-
   spotifyAudio.src = songs[i].src;
   spotifyAudio.play();
   spotifyNotes.innerText = songs[i].note;
 }
-
 </script>
 
 </body>
